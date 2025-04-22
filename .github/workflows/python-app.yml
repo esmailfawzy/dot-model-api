@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -14,30 +14,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Lint with flake8
-        run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Lint with flake8
+      run: |
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-      - name: Test with pytest
-        run: |
-          pytest
+    - name: Test with pytest
+      run: |
+        pytest
 
-      - name: Run Flask app
-        run: |
-          nohup python main.py &  # Start in background
-          sleep 5                 # Wait for server to start
-          curl http://127.0.0.1:5000 || echo "Flask app did not respond"
+    - name: Build Docker image
+      run: docker build -t flask-app .
+
+    - name: Run Flask container
+      run: |
+        docker run -d -p 5000:5000 --name flask_container flask-app
+        sleep 5
+
+    - name: Test Flask endpoint
+      run: |
+        curl http://localhost:5000 || echo "Flask app did not respond"
+
+    - name: Stop container
+      run: docker stop flask_container
