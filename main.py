@@ -294,10 +294,6 @@ tf.config.set_visible_devices([], 'GPU')
 
 app = Flask(__name__)
 
-# Firebase Storage URLs (Replace with actual URLs)
-# model_url = "https://firebasestorage.googleapis.com/v0/b/dot-chair.appspot.com/o/models%2Fimproved_recliner_model.tflite?alt=media&token=0d6f344b-f021-4f94-896f-b35d178e92d0"
-# scaler_url = "https://firebasestorage.googleapis.com/v0/b/dot-chair.appspot.com/o/models%2Fimproved_scaler.pkl?alt=media&token=dea86162-e9c4-4839-9c2e-91423fa028e4"
-
 # Global variables
 scaler = None
 interpreter = None
@@ -305,25 +301,11 @@ input_details = None
 output_details = None
 
 
-# def download_file(url, save_path):
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         with open(save_path, "wb") as f:
-#             f.write(response.content)
-#         print(f"Downloaded {save_path}")
-#     else:
-#         raise Exception(f"Failed to download {save_path}")
-
-
 def load_model_and_scaler():
     global scaler, interpreter, input_details, output_details
 
     tflite_model_path = "new_model.tflite"
     scaler_path = "improved_scaler.pkl"
-
-    # Download files
-    # download_file(model_url, tflite_model_path)
-    # download_file(scaler_url, scaler_path)
 
     # Load scaler
     scaler = joblib.load(scaler_path)

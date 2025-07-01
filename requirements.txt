@@ -1,9 +1,9 @@
-Flask
-gunicorn
-Werkzeug
+Flask==3.0.3
+gunicorn==23.0.0
+Werkzeug==3.0.3
 pandas
-TensorFlow  # Use the version compatible with your model
-# tensorflow==2.16.1  # Use the version compatible with your model
+# TensorFlow  # Use the version compatible with your model
+tensorflow==2.15.0  # Use the version compatible with your model
 # numpy==1.26.4
 # scikit-learn==1.6.1
 joblib
