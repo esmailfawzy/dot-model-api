@@ -1,0 +1,9 @@
+Flask
+gunicorn
+Werkzeug
+pandas
+# TensorFlow  # Use the version compatible with your model
+tensorflow
+# numpy==1.26.4
+# scikit-learn==1.6.1
+joblib
