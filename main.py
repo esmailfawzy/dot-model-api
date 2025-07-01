@@ -289,8 +289,29 @@ import os
 import requests
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ["TF_METAL_DISABLE"] = "1"
 tf.config.set_visible_devices([], 'GPU')
+
+
+def configure_tensorflow():
+    """Configure TensorFlow to avoid Metal conflicts"""
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+    # Option 1: Disable GPU entirely
+    tf.config.set_visible_devices([], 'GPU')
+
+    # Option 2: Configure GPU memory growth (if you need GPU)
+    # try:
+    #     gpus = tf.config.list_physical_devices('GPU')
+    #     if gpus:
+    #         tf.config.experimental.set_memory_growth(gpus[0], True)
+    # except RuntimeError:
+    #     pass
+
+
+# Call this before any other TensorFlow operations
+configure_tensorflow()
 
 app = Flask(__name__)
 
@@ -432,4 +453,5 @@ def api_predict():
 if __name__ == "__main__":
     load_model_and_scaler()
     # app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
