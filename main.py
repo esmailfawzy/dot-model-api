@@ -328,10 +328,11 @@ def load_model_and_scaler():
     tflite_model_path = "new_model.tflite"
     scaler_path = "improved_scaler.pkl"
 
-    # Load scaler
+    if not os.path.exists(scaler_path):
+        raise FileNotFoundError(f"Scaler file not found: {scaler_path}")
+
     scaler = joblib.load(scaler_path)
 
-    # Load TFLite model
     interpreter = tf.lite.Interpreter(model_path=tflite_model_path)
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
